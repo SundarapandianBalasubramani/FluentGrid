@@ -11,7 +11,7 @@ export const MultiLine: React.FC<{
   required?: boolean;
   onChange?: (name: string, value: string) => void;
 }> = ({ name, value, label, onChange, required, disabled }) => {
-  const change: TextareaProps["onChange"] = (ev, data) => {
+  const change: TextareaProps["onChange"] = (_ev, data) => {
     onChange?.(name, data.value);
   };
 

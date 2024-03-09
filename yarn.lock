@@ -207,6 +207,21 @@
     "@griffel/react" "^1.5.14"
     "@swc/helpers" "^0.5.1"
 
+"@fluentui/react-calendar-compat@^0.0.23":
+  version "0.0.23"
+  resolved "https://registry.npmjs.org/@fluentui/react-calendar-compat/-/react-calendar-compat-0.0.23.tgz"
+  integrity sha512-eflGUo1fjX3CSv8uLiDO4kgI4bbnrM/k3ka7ouEQ1mq+FlR06HdxVesTI8tjI8utj7qdHxgECK1bCC0Y84PADA==
+  dependencies:
+    "@fluentui/keyboard-keys" "^9.0.7"
+    "@fluentui/react-icons" "^2.0.224"
+    "@fluentui/react-jsx-runtime" "^9.0.32"
+    "@fluentui/react-shared-contexts" "^9.15.0"
+    "@fluentui/react-tabster" "^9.19.3"
+    "@fluentui/react-theme" "^9.1.17"
+    "@fluentui/react-utilities" "^9.18.3"
+    "@griffel/react" "^1.5.14"
+    "@swc/helpers" "^0.5.1"
+
 "@fluentui/react-card@^9.0.70":
   version "9.0.70"
   resolved "https://registry.npmjs.org/@fluentui/react-card/-/react-card-9.0.70.tgz"
@@ -320,6 +335,27 @@
   integrity sha512-9gEE3jnkAVFDFSoL+q+AVECAVWJcTGFsKkoLOiblgvb0Ti2p7mngFw3oV0wZKR5oXVqqV7TiQD86By+sY51GFA==
   dependencies:
     "@fluentui/react-utilities" "^9.18.3"
+    "@swc/helpers" "^0.5.1"
+
+"@fluentui/react-datepicker-compat@^0.4.26":
+  version "0.4.26"
+  resolved "https://registry.npmjs.org/@fluentui/react-datepicker-compat/-/react-datepicker-compat-0.4.26.tgz"
+  integrity sha512-88BQPjp1ecX9QQMWAJZP3z0N2lSrgflh2U5E3PY+0/ZSkEsNBursa3cJZy+wP2T0w1ohbmfQ3Ru+0l4y61I1cg==
+  dependencies:
+    "@fluentui/keyboard-keys" "^9.0.7"
+    "@fluentui/react-calendar-compat" "^0.0.23"
+    "@fluentui/react-field" "^9.1.56"
+    "@fluentui/react-icons" "^2.0.224"
+    "@fluentui/react-input" "^9.4.66"
+    "@fluentui/react-jsx-runtime" "^9.0.32"
+    "@fluentui/react-popover" "^9.9.0"
+    "@fluentui/react-portal" "^9.4.16"
+    "@fluentui/react-positioning" "^9.14.0"
+    "@fluentui/react-shared-contexts" "^9.15.0"
+    "@fluentui/react-tabster" "^9.19.3"
+    "@fluentui/react-theme" "^9.1.17"
+    "@fluentui/react-utilities" "^9.18.3"
+    "@griffel/react" "^1.5.14"
     "@swc/helpers" "^0.5.1"
 
 "@fluentui/react-dialog@^9.9.13":

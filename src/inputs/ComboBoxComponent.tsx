@@ -37,14 +37,15 @@ export const ComboBoxComponent: React.FC<IComboBoxProps> = ({
   customExpandIcon,
 }) => {
   const styles = useStyles();
-  const onOptionSelect: ComboboxProps["onOptionSelect"] = (ev, data) => {
+  const onOptionSelect: ComboboxProps["onOptionSelect"] = (_ev, data) => {
     if (change) change(name, "selected", data);
   };
   const onInput = (ev: React.ChangeEvent<HTMLInputElement>): void => {
     if (change) change(name, "inputValue", ev.target.value);
   };
 
-  const onTagClick = (option: string, index: number): void => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const onTagClick = (option: string, _index: number): void => {
     const newSelected = value.selectedOptions.filter((o) => o !== option);
     const data: OptionOnSelectData = {
       optionText: "",
