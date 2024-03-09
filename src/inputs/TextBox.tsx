@@ -37,7 +37,7 @@ export const TextBox: React.FC<{
 }) => {
   const inputId = useId("input");
   const styles = useStyles();
-  const onInputChange: InputProps["onChange"] = (ev, data) =>
+  const onInputChange: InputProps["onChange"] = (_ev, data) =>
     onChange?.(name, data.value);
   return (
     <div className={styles.root}>
