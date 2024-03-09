@@ -34,7 +34,7 @@ export const Users: React.FC = () => {
   const [currentData, setCurrentData] = useState<IUser[]>([]);
   const [nextPage, setNextPage] = useState<string | null | undefined>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [prevPage, setPrevPage] = useState<string | null | undefined>();
+  const [, setPrevPage] = useState<string | null | undefined>();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState<string[]>(["10"]);
   const [value, setValue] = useState("");
@@ -48,7 +48,7 @@ export const Users: React.FC = () => {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [direction, setDirection] = useState<EventType>(EventType.None);
+  const [, setDirection] = useState<EventType>(EventType.None);
   const additionalColumns = (row: IUser): React.ReactNode => {
     return (
       <TableCell>
