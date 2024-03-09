@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { SortDirection } from "@fluentui/react-components";
-import { EventType } from "../../types/EventType";
-import { FluentIcon } from "@fluentui/react-icons/lib/utils/createFluentIcon";
+
+import { EventType } from "../types/EventType";
+import { FluentIcon } from "@fluentui/react-icons";
 export enum TableColumnType {
   string,
   number,
