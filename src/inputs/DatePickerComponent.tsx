@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react";
 import { DatePicker } from "@fluentui/react-datepicker-compat";
 import { Field, makeStyles } from "@fluentui/react-components";
@@ -20,6 +21,7 @@ export const DatePickerComponent: React.FC<{
   onChange: (
     name: string,
     value?: string | boolean | string[] | number | number[] | any,
+
     other?: any
   ) => void;
 }> = ({ label, name, onChange, value }) => {
