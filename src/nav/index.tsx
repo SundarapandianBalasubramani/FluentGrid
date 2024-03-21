@@ -1,0 +1,1 @@
+export const LeftNav:React.FC=()=><div>Nav</div>

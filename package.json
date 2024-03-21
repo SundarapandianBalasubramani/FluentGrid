@@ -7,13 +7,15 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "npx json-server db.json"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
     "@fluentui/react-components": "^9.46.8",
     "@fluentui/react-datepicker-compat": "^0.4.26",
     "@fluentui/react-icons": "^2.0.232",
+    "json-server": "^1.0.0-alpha.23",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

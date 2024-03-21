@@ -6,7 +6,6 @@ import {
   TableHeaderCell,
   makeStyles,
   tokens,
-  shorthands,
 } from "@fluentui/react-components";
 
 import { getHeaderSortProps, GetTableCellValue } from "./util";
@@ -14,15 +13,15 @@ import { ITableProps } from "./types";
 import * as React from "react";
 import { NoRecord } from "./NoRecord";
 
-import { Search } from "../inputs/Search";
 import { TableLoader } from "./TableLoader";
+import { AdditionalHeaders } from "../columns/AdditionalHeaders";
+import { AdditionalColumns } from "../columns/AdditionalColumns";
 
 const useStyles = makeStyles({
   root: {
-    display: "flex",
-    flexDirection: "column",
-    ...shorthands.gap("20px"),
     marginTop: "20px",
+    overflowX: "auto",
+    maxWidth: "99%",
   },
   search: {
     alignSelf: "end",
@@ -41,7 +40,7 @@ const useStyles = makeStyles({
   },
 });
 
-export const TableComponent: React.FC<ITableProps> = (props) => {
+export const EnhancedTable: React.FC<ITableProps> = (props) => {
   const styles = useStyles();
   const {
     columns,
@@ -51,21 +50,16 @@ export const TableComponent: React.FC<ITableProps> = (props) => {
     icon,
     keyColumn,
     onEvent,
-    computedActions,
-    computedHeaders,
     computed,
-    search,
-    onSearchChange,
     additionalColumns = 0,
     isLoading,
+    canDelete,
+    canEdit,
+    additionalActions,
+    additionalHeaders,
   } = props;
   return (
     <div className={styles.root}>
-      {typeof search === "string" && (
-        <div className={styles.search}>
-          <Search value={search} onChange={onSearchChange} />
-        </div>
-      )}
       <Table sortable>
         <TableHeader>
           <TableRow className={styles.head}>
@@ -79,7 +73,7 @@ export const TableComponent: React.FC<ITableProps> = (props) => {
                 {column.label}
               </TableHeaderCell>
             ))}
-            {computedHeaders?.()}
+            {additionalHeaders && <AdditionalHeaders />}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -95,7 +89,14 @@ export const TableComponent: React.FC<ITableProps> = (props) => {
                   computed={computed}
                 />
               ))}
-              {computedActions?.(item)}
+              {additionalActions && (
+                <AdditionalColumns
+                  row={item}
+                  canDelete={canDelete}
+                  canEdit={canEdit}
+                  onRowEvent={onEvent}
+                />
+              )}
             </TableRow>
           ))}
           {!isLoading && rows.length === 0 && (

@@ -45,10 +45,12 @@ export interface ITableProps {
   keyColumn: string;
   computed?: (column: ITableColumn, row: any) => any;
   onEvent?: (type: EventType, row: any) => void;
-  computedActions?: (row: any) => any;
-  computedHeaders?: () => any;
-  search?: string;
-  onSearchChange?: (name: string, value: string) => void;
+  additionalActions?: boolean;
+  additionalHeaders?: boolean;
+
   additionalColumns?: number;
   isLoading?: boolean;
+  canEdit?: boolean;
+
+  canDelete?: boolean;
 }
