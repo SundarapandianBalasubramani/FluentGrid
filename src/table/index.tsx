@@ -8,7 +8,7 @@ import {
   tokens,
 } from "@fluentui/react-components";
 
-import { getHeaderSortProps, GetTableCellValue } from "./util";
+import {  TableCellValue } from "./TableCellValue";
 import { ITableProps } from "./types";
 import * as React from "react";
 import { NoRecord } from "./NoRecord";
@@ -16,6 +16,7 @@ import { NoRecord } from "./NoRecord";
 import { TableLoader } from "./TableLoader";
 import { AdditionalHeaders } from "../columns/AdditionalHeaders";
 import { AdditionalColumns } from "../columns/AdditionalColumns";
+import { getHeaderSortProps } from "./util";
 
 const useStyles = makeStyles({
   root: {
@@ -81,7 +82,7 @@ export const EnhancedTable: React.FC<ITableProps> = (props) => {
           {rows.map((item) => (
             <TableRow key={item[keyColumn]}>
               {columns.map((column, i) => (
-                <GetTableCellValue
+                <TableCellValue
                   key={String(item[keyColumn] + i)}
                   obj={item}
                   column={column}

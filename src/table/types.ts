@@ -11,6 +11,7 @@ export enum ColumnType {
 
 }
 
+
 export interface IColumn {
   columnKey: string;
   label: string;
@@ -57,4 +58,8 @@ export interface ITableProps {
   customAction?: React.ReactNode;
 
   colSpan: number;
+}
+
+export interface IValue{
+  [key: string] : undefined | number | string | object | null | IValue
 }
