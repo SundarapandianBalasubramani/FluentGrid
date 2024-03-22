@@ -1,10 +1,10 @@
 import { Layout } from "./layout";
-import { Users } from "./users";
+import { AppRoutes } from "./routes";
 
 function App() {
   return (
     <Layout>
-      <Users />
+      <AppRoutes />
     </Layout>
   );
 }

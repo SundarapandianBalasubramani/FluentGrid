@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import { getUsers, pageSizes } from "./data";
-import { IUser } from "./types";
-import { ITableColumn, SortState } from "../table/types";
+import { IPager, IUser } from "./types";
+import { IColumn, SortState } from "../table/types";
 import {
-  OptionOnSelectData,
-  SelectionEvents,
+  SliderOnChangeData,
   SortDirection,
   makeStyles,
   shorthands,
@@ -13,6 +11,7 @@ import { EventType } from "../types/EventType";
 import { EnhancedTable } from "../table";
 import { columns } from "./columns";
 import { Pagination } from "../pagination";
+import { useGetUsersQuery } from "../store/user";
 
 const useStyles = makeStyles({
   container: {
@@ -26,102 +25,90 @@ const useStyles = makeStyles({
   },
 });
 
+const _pager: IPager = {
+  page: 1,
+  size: 10,
+  sort: [],
+  filter: [],
+};
+
 export const Users: React.FC = () => {
   const classes = useStyles();
-  const [users, setUsers] = useState<IUser[]>([]);
-  const [nextPage, setNextPage] = useState<string | null | undefined>();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [, setPrevPage] = useState<string | null | undefined>();
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState<number[]>([10]);
-  const [loader, setLoader] = useState(true);
+  const [pager, setPager] = useState<IPager>(structuredClone(_pager));
+  const [details, setDetails] = useState<{ pages: number; total: number }>({
+    pages: 0,
+    total: 0,
+  });
+  const { isLoading, data } = useGetUsersQuery(pager);
   const [sortState, setSortState] = useState<SortState>({
     sortDirection: undefined,
     sortColumn: undefined,
   });
+
+  useEffect(() => {
+    if (data) setDetails({ pages: data.pages, total: data.items });
+  }, [data]);
+
   const onRowEvent = (evt: EventType, row: IUser): void => {
     console.log(evt, row);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [, setDirection] = useState<EventType>(EventType.None);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      const data = getUsers(50);
-      setUsers(data);
-      setLoader(false);
-      console.log(data);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const onSort = (column: ITableColumn, _e?: React.MouseEvent): void => {
-    const direction: SortDirection =
-      sortState.sortDirection === "ascending" ? "descending" : "ascending";
-    console.log(direction, column.label);
+  const onSort = (column: IColumn, _e?: React.MouseEvent): void => {
+    let direction: SortDirection =
+      sortState.sortDirection === "descending" ? "ascending" : "descending";
+    if (sortState.sortColumn !== column.columnKey) direction = "ascending";
     setSortState({
       sortColumn: column.columnKey,
       sortDirection: direction,
       type: column.type,
     });
-    setPage(1);
-    setDirection(EventType.None);
-    setNextPage(null);
-    setPrevPage(null);
+    const sortby =
+      direction === "descending" ? `-${column.columnKey}` : column.columnKey;
+    setPager((prev) => ({ ...prev, page: 1, sort: [sortby] }));
   };
 
-  const onOptionSelect = (
-    _event: SelectionEvents,
-    data: OptionOnSelectData
-  ): void => {
-    if (data.optionValue) {
-      setPageSize([Number(data.optionValue)]);
-      setPage(1);
-      setDirection(EventType.None);
-      setNextPage(null);
-      setPrevPage(null);
-    }
-  };
+  const onPageChange = (current: number): void =>
+    setPager((prev) => ({ ...prev, page: current }));
 
-  const onPageChange = (event: EventType): void => {
-    setDirection(event);
-    if (event === EventType.Next) setPage((p) => p + 1);
-    else setPage((p) => p - 1);
+  const onSizeChange = (
+    _: React.ChangeEvent<HTMLInputElement>,
+    _data: SliderOnChangeData
+  ) => {
+    setPager((prev) => ({ ...prev, size: _data.value, page: 1 }));
   };
 
   return (
     <div className={classes.container}>
       <Pagination
-        hasNext={!nextPage}
-        pageNo={page}
-        pageSizes={pageSizes}
-        pageSize={pageSize}
-        onSizeChange={onOptionSelect}
+        page={pager.page}
+        pages={details.pages}
+        size={pager.size}
+        total={details.total}
+        onSizeChange={onSizeChange}
         onPageChange={onPageChange}
       />
       <EnhancedTable
         columns={columns}
-        rows={users}
+        rows={data?.data ?? []}
         sortState={sortState}
         onSort={onSort}
         keyColumn="id"
-        isLoading={loader}
-        additionalColumns={1}
-        additionalActions
-        additionalHeaders
-        canDelete={true}
-        canEdit={true}
+        isLoading={isLoading}
+        showActions
+        canDelete
+        canEdit
+        canView
         onEvent={onRowEvent}
+        colSpan={columns.length + 1}
       />
       <Pagination
-        hasNext={!nextPage}
-        pageNo={page}
-        pageSizes={pageSizes}
-        pageSize={pageSize}
-        onSizeChange={onOptionSelect}
+        page={pager.page}
+        pages={details.pages}
+        size={pager.size}
+        onSizeChange={onSizeChange}
         onPageChange={onPageChange}
+        total={details.total}
       />
     </div>
   );

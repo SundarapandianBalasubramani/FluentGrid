@@ -1,5 +1,5 @@
 import { SortDirection } from "@fluentui/react-table";
-import { SortState, TableColumnType } from "./table/types";
+import { SortState, ColumnType } from "./table/types";
 const distantFuture = new Date(1000, 1, 1);
 export const searchItems = <T>(
   text: string,
@@ -75,15 +75,15 @@ export const sortItems = <T>(data: T[], state: SortState): T[] => {
     const dir: SortDirection =
       state.sortDirection === "descending" ? "descending" : "ascending";
     if (dir === "ascending") {
-      if (state.type === TableColumnType.number)
+      if (state.type === ColumnType.number)
         return sortAscNumbers(data, key);
-      else if (state.type === TableColumnType.date)
+      else if (state.type === ColumnType.date)
         return sortAscDate(data, key);
       return sortAscStrings(data, key);
     } else {
-      if (state.type === TableColumnType.number)
+      if (state.type === ColumnType.number)
         return sortDescNumbers(data, key);
-      else if (state.type === TableColumnType.date)
+      else if (state.type === ColumnType.date)
         return sortDescDate(data, key);
       return sortDescStrings(data, key);
     }

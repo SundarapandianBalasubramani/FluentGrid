@@ -1,12 +1,12 @@
-import { ITableColumn, TableColumnType } from "../table/types";
+import { IColumn, ColumnType } from "../table/types";
 
-export const columns: ITableColumn[] = [
+export const columns: IColumn[] = [
   {
     columnKey: "id",
     label: "ID",
     width: "40px",
     sortable: true,
-    type: TableColumnType.number,
+    type: ColumnType.number,
   },
   {
     label: "Name",
@@ -40,6 +40,20 @@ export const columns: ITableColumn[] = [
     columnKey: "zipCode",
     width: "100px",
     sortable: true,
-    type: TableColumnType.number,
+    type: ColumnType.number,
+  },
+  {
+    label: "Date",
+    columnKey: "date",
+    width: "80px",
+    sortable: true,
+    type: ColumnType.date,
+  },
+  {
+    label: "Roles",
+    columnKey: "roles",
+    width: "120px",
+    sortable: false,
+    type: ColumnType.string,
   },
 ];

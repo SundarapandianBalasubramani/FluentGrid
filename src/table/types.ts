@@ -3,14 +3,15 @@ import { SortDirection } from "@fluentui/react-components";
 
 import { EventType } from "../types/EventType";
 import { FluentIcon } from "@fluentui/react-icons";
-export enum TableColumnType {
-  string,
-  number,
-  date,
-  link,
+export enum ColumnType {
+  string = "string",
+  number = "number",
+  date = "date",
+  link = "link",
+
 }
 
-export interface ITableColumn {
+export interface IColumn {
   columnKey: string;
   label: string;
   sortable?: boolean;
@@ -18,7 +19,7 @@ export interface ITableColumn {
   options?: any;
   computed?: boolean;
   width?: string;
-  type?: TableColumnType;
+  type?: ColumnType;
   route?: string;
   truncate?: boolean;
   shwTitle?: boolean;
@@ -27,7 +28,7 @@ export interface ITableColumn {
 export type SortState = {
   sortDirection: SortDirection | undefined;
   sortColumn: string | undefined;
-  type?: TableColumnType;
+  type?: ColumnType;
 };
 
 export interface IRowEvent {
@@ -37,20 +38,23 @@ export interface IRowEvent {
 }
 
 export interface ITableProps {
-  columns: ITableColumn[];
+  columns: IColumn[];
   rows: any[];
   sortState?: SortState;
-  onSort?: (column: ITableColumn, e?: React.MouseEvent) => void;
+  onSort?: (column: IColumn, e?: React.MouseEvent) => void;
   icon?: (row: any) => any;
   keyColumn: string;
-  computed?: (column: ITableColumn, row: any) => any;
+  computed?: (column: IColumn, row: any) => any;
   onEvent?: (type: EventType, row: any) => void;
-  additionalActions?: boolean;
-  additionalHeaders?: boolean;
-
-  additionalColumns?: number;
+  showActions?: boolean;
   isLoading?: boolean;
   canEdit?: boolean;
 
   canDelete?: boolean;
+
+  canView?: boolean;
+
+  customAction?: React.ReactNode;
+
+  colSpan: number;
 }

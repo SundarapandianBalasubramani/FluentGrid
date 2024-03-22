@@ -36,6 +36,7 @@ export const getUsers = (length: number): IUser[] => {
     user.zipCode = faker.location.zipCode();
     user.email = faker.internet.email();
     user.roles = getRoles(i);
+    user.date = faker.date.past();
     users.push(user as IUser);
   }
   return users;

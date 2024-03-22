@@ -7,14 +7,13 @@ import {
   SpinButton,
   tokens,
   Slider,
-  SliderProps,
+  SliderOnChangeData,
+  SpinButtonProps,
 } from "@fluentui/react-components";
 import {
   ArrowNext24Regular,
   ArrowPrevious24Regular,
 } from "@fluentui/react-icons";
-import { SelectionEvents, OptionOnSelectData } from "@fluentui/react-combobox";
-import { EventType } from "../types/EventType";
 import * as React from "react";
 
 const useStyles = makeStyles({
@@ -23,8 +22,8 @@ const useStyles = makeStyles({
     flexWrap: "wrap",
     justifyContent: "end",
     ...shorthands.gap("20px"),
-    marginRight:"20px",
-    marginTop:"20px"
+    marginRight: "20px",
+    marginTop: "20px",
   },
   slider: {
     display: "flex",
@@ -39,14 +38,15 @@ const useStyles = makeStyles({
     ...shorthands.gap("20px", "0px"),
     "& div": {
       display: "flex",
-      flexDirection: "column",          
+      flexDirection: "column",
       justifyContent: "center",
-      alignContent:'center',
+      alignContent: "center",
       "> label": {
         marginBottom: tokens.spacingVerticalXXS,
-      }     
+        marginTop: tokens.spacingVerticalXXS,
+      },
     },
-  },  
+  },
   button: {
     width: "50px",
   },
@@ -56,52 +56,66 @@ const useStyles = makeStyles({
   },
 });
 export const Pagination: React.FC<{
-  hasNext?: boolean;
-  pageNo: number;
-  pageSizes: Array<string>;
-  pageSize: Array<number | string>;
-  onSizeChange: (event: SelectionEvents, data: OptionOnSelectData) => void;
-  onPageChange: (event: EventType) => void;
+  step?: number;
+  min?: number;
+  max?: number;
+  page: number;
+  pages: number;
+  size: number;
+  total: number;
+  onSizeChange: (
+    ev: React.ChangeEvent<HTMLInputElement>,
+    data: SliderOnChangeData
+  ) => void;
+  onPageChange: (current: number) => void;
 }> = (props) => {
   const classes = useStyles();
   const {
-    hasNext = false,
-    pageNo,
-
+    page,
+    pages,
+    size,
+    step = 10,
+    min = 10,
+    max = 50,
+    total,
+    onSizeChange,
     onPageChange,
   } = props;
 
   const spinBtnId = useId();
   const sliderId = useId();
 
-  // const onDropDownChange = (
-  //   event: SelectionEvents,
-  //   data: OptionOnSelectData
-  // ): void => {
-  //   if (pageSize[0] !== data.optionText) onSizeChange(event, data);
-  // };
-
-  const [sliderValue, setSliderValue] = React.useState(10);
-  const onSliderChange: SliderProps["onChange"] = (_, data) =>
-    setSliderValue(data.value);
+  const onSpinButtonChange: SpinButtonProps["onChange"] = (_ev, data) => {
+    console.log("onSpinButtonChange", data.value, data.displayValue);
+    if (data.value) onPageChange(data.value);
+    else if (data.displayValue !== undefined) {
+      const newValue = parseFloat(data.displayValue);
+      if (!Number.isNaN(newValue)) {
+        onPageChange(newValue);
+      } else {
+        console.error(`Cannot parse "${data.displayValue}" as a number.`);
+      }
+    }
+  };
 
   return (
     <div className={classes.container}>
       <div>
         <div className={classes.slider}>
-          <Label htmlFor={sliderId}>{`Records Size: ${sliderValue}`}</Label>
+          <Label htmlFor={sliderId}>{`Records Size: ${size}`}</Label>
           <div className={classes.wrapper}>
             <Label aria-hidden>{10}</Label>
             <Slider
-              value={sliderValue}
-              onChange={onSliderChange}
-              step={10}
-              min={10}
-              max={50}
+              value={size}
+              onChange={onSizeChange}
+              step={step}
+              min={min}
+              max={max}
               id={sliderId}
             />
             <Label aria-hidden>{50}</Label>
           </div>
+          <Label htmlFor={sliderId}>{`Total Records: ${total}`}</Label>
         </div>
       </div>
       <div className={classes.pager}>
@@ -109,32 +123,34 @@ export const Pagination: React.FC<{
           <Button
             shape="circular"
             appearance="primary"
-            disabled={pageNo === 1}
+            disabled={page === 1}
             icon={<ArrowPrevious24Regular />}
             onClick={() => {
-              onPageChange(EventType.Prev);
+              onPageChange(page - 1);
             }}
           />
         </div>
         <div>
-          <Label htmlFor={spinBtnId}>{`Page: ${pageNo}`}</Label>
+          <Label htmlFor={spinBtnId}>{`Page: ${page}`}</Label>
           <SpinButton
             className={classes.spinbutton}
-            value={pageNo}
-            min={0}
-            max={20}
+            value={page}
+            min={1}
+            max={pages}
             id={spinBtnId}
             size="small"
+            onChange={onSpinButtonChange}
           />
+          <Label htmlFor={sliderId}>{`Total Pages: ${pages}`}</Label>
         </div>
         <div>
           <Button
-            disabled={hasNext}
+            disabled={page === pages || page > pages}
             appearance="primary"
             className={classes.button}
             icon={<ArrowNext24Regular />}
             onClick={() => {
-              onPageChange(EventType.Next);
+              onPageChange(page + 1);
             }}
             shape="circular"
           />

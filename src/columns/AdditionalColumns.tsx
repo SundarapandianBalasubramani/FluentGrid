@@ -4,7 +4,11 @@ import {
   shorthands,
   TableCell,
 } from "@fluentui/react-components";
-import { Delete24Regular, DocumentEdit24Regular } from "@fluentui/react-icons";
+import {
+  Delete24Regular,  
+  Edit24Regular,
+  Eye24Filled,
+} from "@fluentui/react-icons";
 import { EventType } from "../types/EventType";
 const useStyles = makeStyles({
   buttons: {
@@ -18,23 +22,35 @@ export interface AdditionalColumnProps {
   row: unknown | object;
   canEdit?: boolean;
   canDelete?: boolean;
+
+  canView?: boolean;
 }
 export const AdditionalColumns: React.FC<AdditionalColumnProps> = ({
   onRowEvent,
   row,
   canDelete,
   canEdit,
+  canView,
 }) => {
   const classes = useStyles();
   return (
     <TableCell>
       <div className={classes.buttons}>
+        {canView && (
+          <Button
+            title={"View"}
+            icon={<Eye24Filled />}
+            onClick={() => {
+              onRowEvent?.(EventType.View, row);
+            }}
+          />
+        )}
         {canEdit && (
           <Button
             title={"Edit"}
-            icon={<DocumentEdit24Regular />}
+            icon={<Edit24Regular />}
             onClick={() => {
-              onRowEvent?.(EventType.View, row);
+              onRowEvent?.(EventType.Edit, row);
             }}
           />
         )}

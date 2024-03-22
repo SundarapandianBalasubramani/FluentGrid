@@ -4,15 +4,15 @@ import {
   TableCell,
   TableCellLayout,
 } from "@fluentui/react-components";
-import { ITableColumn, SortState, TableColumnType } from "./types";
+import { IColumn, SortState, ColumnType } from "./types";
 import * as React from "react";
 import { EventType } from "../types/EventType";
 
 export const getHeaderSortProps = (
-  column: ITableColumn,
+  column: IColumn,
   sortState?: SortState,
   className?: string,
-  onSort?: (column: ITableColumn, e?: React.MouseEvent) => void
+  onSort?: (column: IColumn, e?: React.MouseEvent) => void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any => {
   if (column.sortable) {
@@ -38,10 +38,10 @@ export const formatDate = (value: string): string => {
 
 export const GetTableCellValue: React.FC<{
   obj: any;
-  column: ITableColumn;
+  column: IColumn;
   icon?: (row: any) => any;
   onEvent?: (type: EventType, row: any) => void;
-  computed?: (column: ITableColumn, row: any) => any;
+  computed?: (column: IColumn, row: any) => any;
 }> = ({ obj, column, icon, computed }) => {
   let val = obj[column.columnKey];
   if (column.columnKey.indexOf(".") > 0) {
@@ -50,10 +50,11 @@ export const GetTableCellValue: React.FC<{
     nested.forEach((ele) => {
       if (ele in curr) curr = curr[ele];
     });
-    if (curr) val = curr;
+    if (curr) val = curr;  
   }
+  if (Array.isArray(val)) val = val.join(", ");  
   if (column.computed && computed) val = computed(column, obj);
-  if (column.type === TableColumnType.date) val = formatDate(val);
+  if (column.type === ColumnType.date) val = formatDate(val);
   if (column.options) val = column.options[val];
   const truncate = "truncate" in column ? column.truncate : true;
   return (

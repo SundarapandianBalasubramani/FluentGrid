@@ -5,16 +5,12 @@ const useStyles = makeStyles({
     height: "48px",
     width: "100%",
     backgroundColor: "#0F6CBD",
-  },
-  header: {
-    width: "100%"  
+    position: "sticky",
+    top: "0px",
+    zIndex: 200,
   },
 });
 export const Header: React.FC = () => {
   const classes = useStyles();
-  return (
-    <div className={classes.root}>
-      <div className={classes.header}></div>
-    </div>
-  );
+  return <header className={classes.root}></header>;
 };

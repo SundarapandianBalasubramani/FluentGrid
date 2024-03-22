@@ -51,12 +51,13 @@ export const EnhancedTable: React.FC<ITableProps> = (props) => {
     keyColumn,
     onEvent,
     computed,
-    additionalColumns = 0,
     isLoading,
     canDelete,
     canEdit,
-    additionalActions,
-    additionalHeaders,
+    showActions,
+    customAction,
+    canView,
+    colSpan,
   } = props;
   return (
     <div className={styles.root}>
@@ -73,15 +74,15 @@ export const EnhancedTable: React.FC<ITableProps> = (props) => {
                 {column.label}
               </TableHeaderCell>
             ))}
-            {additionalHeaders && <AdditionalHeaders />}
+            {showActions && <AdditionalHeaders />}
           </TableRow>
         </TableHeader>
         <TableBody>
           {rows.map((item) => (
             <TableRow key={item[keyColumn]}>
-              {columns.map((column) => (
+              {columns.map((column, i) => (
                 <GetTableCellValue
-                  key={item[keyColumn]}
+                  key={String(item[keyColumn] + i)}
                   obj={item}
                   column={column}
                   icon={icon}
@@ -89,22 +90,20 @@ export const EnhancedTable: React.FC<ITableProps> = (props) => {
                   computed={computed}
                 />
               ))}
-              {additionalActions && (
+              {showActions && (
                 <AdditionalColumns
                   row={item}
                   canDelete={canDelete}
                   canEdit={canEdit}
+                  canView={canView}
                   onRowEvent={onEvent}
                 />
               )}
+              {!showActions && customAction}
             </TableRow>
           ))}
-          {!isLoading && rows.length === 0 && (
-            <NoRecord colSpan={columns.length + additionalColumns} />
-          )}
-          {isLoading && (
-            <TableLoader colSpan={columns.length + additionalColumns} />
-          )}
+          {!isLoading && rows.length === 0 && <NoRecord colSpan={colSpan} />}
+          {isLoading && <TableLoader colSpan={colSpan} />}
         </TableBody>
       </Table>
     </div>
