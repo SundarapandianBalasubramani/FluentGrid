@@ -1,20 +1,7 @@
 import * as React from "react";
-import {
-  makeStyles,
-  shorthands,
-  useId,
-  Input,
-  Label,
-} from "@fluentui/react-components";
+import { Input, Field } from "@fluentui/react-components";
 import type { InputProps, Slot } from "@fluentui/react-components";
-
-const useStyles = makeStyles({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    ...shorthands.gap("2px"),
-  },
-});
+import { FieldType } from "../fields/types";
 
 export const TextBox: React.FC<{
   value: string;
@@ -23,8 +10,10 @@ export const TextBox: React.FC<{
   placeholder?: string;
   disabled?: boolean;
   required?: boolean;
-  onChange?: (name: string, value: string) => void;
+  onChange?: (name: string, value: unknown, data?: unknown) => void;
   contentAfter?: Slot<"span">;
+  validationState?: "error" | "warning" | "success" | "none";
+  validationMessage?: string;
 }> = ({
   name,
   value,
@@ -34,18 +23,17 @@ export const TextBox: React.FC<{
   contentAfter,
   disabled,
   required,
+  validationState,
+  validationMessage,
 }) => {
-  const inputId = useId("input");
-  const styles = useStyles();
   const onInputChange: InputProps["onChange"] = (_ev, data) =>
-    onChange?.(name, data.value);
+    onChange?.(name, FieldType.Text, data.value);
   return (
-    <div className={styles.root}>
-      {label && (
-        <Label required={required} htmlFor={inputId}>
-          {label}
-        </Label>
-      )}
+    <Field
+      label={label}
+      validationState={validationState}
+      validationMessage={validationMessage}
+    >
       <Input
         required={required}
         disabled={disabled}
@@ -53,9 +41,8 @@ export const TextBox: React.FC<{
         placeholder={placeholder}
         value={value}
         onChange={onInputChange}
-        id={inputId}
         contentAfter={contentAfter}
       />
-    </div>
+    </Field>
   );
 };

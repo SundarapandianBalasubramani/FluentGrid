@@ -14,7 +14,14 @@ export const Search: React.FC<{
   useEffect(() => {
     setSearch(value);
   }, [value]);
-  const onSearchChange = (_name: string, val: string): void => setSearch(val);
+  const onSearchChange = (
+    _name: string,
+    val: unknown,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _data?: unknown
+  ): void => {
+    setSearch(val as string);
+  };
 
   return (
     <TextBox

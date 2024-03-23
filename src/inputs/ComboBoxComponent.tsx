@@ -2,15 +2,16 @@ import * as React from "react";
 import {
   Combobox,
   Option,
-  Label,
   makeStyles,
   Button,
   tokens,
+  Field,
 } from "@fluentui/react-components";
 import type { ComboboxProps } from "@fluentui/react-components";
 import { IComboBoxProps } from "./types";
 import { Dismiss12Regular } from "@fluentui/react-icons";
 import type { OptionOnSelectData } from "@fluentui/react-combobox";
+import { FieldType } from "../fields/types";
 
 const useStyles = makeStyles({
   tagsList: {
@@ -28,21 +29,17 @@ export const ComboBoxComponent: React.FC<IComboBoxProps> = ({
   label,
   name,
   value,
-  change,
-  multiSelect,
+  onChange,
   disabled,
   required,
-  setlabelfor,
   showtags,
   customExpandIcon,
 }) => {
   const styles = useStyles();
-  const onOptionSelect: ComboboxProps["onOptionSelect"] = (_ev, data) => {
-    if (change) change(name, "selected", data);
-  };
-  const onInput = (ev: React.ChangeEvent<HTMLInputElement>): void => {
-    if (change) change(name, "inputValue", ev.target.value);
-  };
+  const onOptionSelect: ComboboxProps["onOptionSelect"] = (_ev, data) =>
+    onChange?.(name, FieldType.Combobox, data, "selected");
+  const onInput = (ev: React.ChangeEvent<HTMLInputElement>): void =>
+    onChange?.(name, FieldType.Combobox, ev.target.value, "inputValue");
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onTagClick = (option: string, _index: number): void => {
@@ -52,21 +49,13 @@ export const ComboBoxComponent: React.FC<IComboBoxProps> = ({
       optionValue: "",
       selectedOptions: newSelected,
     };
-    if (change) change(name, "selected", data);
+    onChange?.(name, FieldType.Combobox, data, "selected");
   };
 
   return (
-    <>
-      <Label
-        disabled={disabled}
-        required={required}
-        {...(setlabelfor ? { htmlFor: name } : {})}
-      >
-        {label}
-      </Label>
-      &nbsp;
+    <Field label={label} required={required}>
       <Combobox
-        multiselect={multiSelect}
+        multiselect={value.multiple}
         disabled={disabled}
         id={name}
         name={name}
@@ -100,6 +89,6 @@ export const ComboBoxComponent: React.FC<IComboBoxProps> = ({
           ))}
         </ul>
       ) : null}
-    </>
+    </Field>
   );
 };

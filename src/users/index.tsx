@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IPager, IUser } from "./types";
 import { IColumn, SortState } from "../table/types";
 import {
@@ -12,6 +12,9 @@ import { EnhancedTable } from "../table";
 import { columns } from "./columns";
 import { Pagination } from "../pagination";
 import { useGetUsersQuery } from "../store/user";
+import { Filter } from "../filter";
+import { WebContext } from "../context";
+import { fields } from "./fields";
 
 const useStyles = makeStyles({
   container: {
@@ -33,13 +36,15 @@ const _pager: IPager = {
 };
 
 export const Users: React.FC = () => {
+  const { notify } = useContext(WebContext);
+
   const classes = useStyles();
   const [pager, setPager] = useState<IPager>(structuredClone(_pager));
   const [details, setDetails] = useState<{ pages: number; total: number }>({
     pages: 0,
     total: 0,
   });
-  const { isLoading, data } = useGetUsersQuery(pager);
+  const { isLoading, data, error } = useGetUsersQuery(pager);
   const [sortState, setSortState] = useState<SortState>({
     sortDirection: undefined,
     sortColumn: undefined,
@@ -47,7 +52,8 @@ export const Users: React.FC = () => {
 
   useEffect(() => {
     if (data) setDetails({ pages: data.pages, total: data.items });
-  }, [data]);
+    if (error && "error" in error) notify(error.error, "error");
+  }, [data, error, notify]);
 
   const onRowEvent = (evt: EventType, row: IUser): void => {
     console.log(evt, row);
@@ -80,14 +86,7 @@ export const Users: React.FC = () => {
 
   return (
     <div className={classes.container}>
-      <Pagination
-        page={pager.page}
-        pages={details.pages}
-        size={pager.size}
-        total={details.total}
-        onSizeChange={onSizeChange}
-        onPageChange={onPageChange}
-      />
+      <Filter data={fields} />
       <EnhancedTable
         columns={columns}
         rows={data?.data ?? []}

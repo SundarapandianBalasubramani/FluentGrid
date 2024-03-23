@@ -1,11 +1,14 @@
+import Context from "./context";
 import { Layout } from "./layout";
 import { AppRoutes } from "./routes";
 
 function App() {
   return (
-    <Layout>
-      <AppRoutes />
-    </Layout>
+    <Context>
+      <Layout>
+        <AppRoutes />
+      </Layout>
+    </Context>
   );
 }
 

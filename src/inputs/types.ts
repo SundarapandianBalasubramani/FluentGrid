@@ -1,41 +1,38 @@
+import { FieldType } from "../fields/types";
+
 export interface IOption {
   id: string | number;
   value: string;
 }
 
 export interface IndexedOption {
-  [id: number | string]: IOption | IExtendedOption;
-}
-
-export interface IExtendedOption extends IOption {
-  text: string;
-  company_name?: string;
-  email?: string;
-  phone: string;
-  address: string;
-  company_flag?: string;
-  issystemuser?: string;
-  division_id?: string;
+  [id: number | string]: IOption;
 }
 
 export interface ICustomComboBoxState {
   loading: boolean;
   selected: IOption | undefined;
   inputValue: string;
-  data: IOption[] | IExtendedOption[];
+  data: IOption[];
   unique: IndexedOption;
   selectedOptions: string[];
+
+  multiple?: boolean;
 }
 
 export interface IComboBoxProps {
-  label: string;
+  label?: string;
   name: string;
+
   value: ICustomComboBoxState;
   required?: boolean;
-  multiSelect?: boolean;
   customExpandIcon?: React.ReactElement;
   disabled?: boolean;
-  change?: (name: string, key: keyof ICustomComboBoxState, val: any) => void;
+  onChange?: (
+    name: string,
+    type: FieldType,
+    val: unknown,
+    data?: unknown | keyof ICustomComboBoxState
+  ) => void;
   showtags?: boolean;
-  setlabelfor?: boolean;
 }

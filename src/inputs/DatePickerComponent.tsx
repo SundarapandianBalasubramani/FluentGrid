@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react";
 import { DatePicker } from "@fluentui/react-datepicker-compat";
 import { Field, makeStyles } from "@fluentui/react-components";
+import { FieldType } from "../fields/types";
 
 const useStyles = makeStyles({
   root: {
@@ -10,32 +10,32 @@ const useStyles = makeStyles({
     rowGap: "15px",
   },
   control: {
-    maxWidth: "300px",
+    maxWidth: "100%",
   },
 });
 
 export const DatePickerComponent: React.FC<{
-  label: string;
+  label?: string;
   name: string;
   value: Date | null | undefined | string;
   onChange: (
     name: string,
-    value?: string | boolean | string[] | number | number[] | any,
-
-    other?: any
+    type: FieldType,
+    value: unknown,
+    other?: unknown
   ) => void;
 }> = ({ label, name, onChange, value }) => {
   const styles = useStyles();
 
   const onSelectDate = (date: Date | null | undefined): void => {
-    onChange(name, date);
+    onChange(name, FieldType.Date, date);
   };
 
   return (
     <div className={styles.root}>
       <Field label={label}>
         <DatePicker
-          value={value as any}
+          value={value as Date}
           onSelectDate={onSelectDate}
           placeholder="Select a date..."
           className={styles.control}
