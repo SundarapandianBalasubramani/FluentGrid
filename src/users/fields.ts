@@ -64,3 +64,13 @@ export const fields: IField[] = [
     value: initial,
   },
 ];
+
+export const getFilterFields = () => {
+  const newset = structuredClone(fields);
+  newset.forEach((fld) => {
+    delete fld.validationMessage;
+    delete fld.validationState;
+    delete fld.required;
+  });
+  return newset;
+};

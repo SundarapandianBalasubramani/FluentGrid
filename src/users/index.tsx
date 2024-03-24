@@ -15,7 +15,7 @@ import { Pagination } from "../pagination";
 import { useGetUsersQuery } from "../store/user";
 import { Filter } from "../filter";
 import { WebContext } from "../context";
-import { fields } from "./fields";
+import { fields, getFilterFields } from "./fields";
 import { FieldType, IField } from "../fields/types";
 import { Add28Filled } from "@fluentui/react-icons";
 import { User } from "../forms/User";
@@ -149,7 +149,7 @@ export const Users: React.FC = () => {
               Add User
             </Button>
           </div>
-          <Filter data={structuredClone(fields)} onApplyFilter={onFilter} />
+          <Filter data={getFilterFields()} onApplyFilter={onFilter} />
         </div>
         <EnhancedTable
           columns={columns}

@@ -32,10 +32,12 @@ export const User: React.FC<{
   onSave: (event: EventType, fields: IField[]) => void;
 }> = ({ data, onSave }) => {
   const details = useMemo(() => {
-    const info = { Ok: "Add User" };
+    const info = { Ok: "Add User", id: 0 };
     const fld = data.find((d) => d.name === "id");
     if (!isNaN(parseFloat(fld?.value as string))) {
       info.Ok = "Update User";
+      if (fld?.value && !isNaN(parseFloat(fld.value as string)))
+        info.id = parseFloat(fld.value as string);
     }
     return info;
   }, [data]);

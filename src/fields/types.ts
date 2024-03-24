@@ -6,6 +6,8 @@ export interface IField {
 
   type: FieldType;
 
+  required?: false;
+
   options?: string[];
 
   value: unknown;

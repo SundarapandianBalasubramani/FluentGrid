@@ -36,5 +36,4 @@ export interface IPager {
   sort: string[];
 
   filter: string[];
-  
 }
