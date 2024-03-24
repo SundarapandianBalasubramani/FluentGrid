@@ -4,6 +4,7 @@ import { FieldType, IField } from "./types";
 import { DatePickerComponent } from "../inputs/DatePickerComponent";
 import { ComboBoxComponent } from "../inputs/ComboBoxComponent";
 import { ICustomComboBoxState } from "../inputs/types";
+import { TextNumberBox } from "../inputs/TextNumberBox";
 
 export interface IFieldsProps {
   data: IField[];
@@ -41,14 +42,24 @@ export const Fields: React.FC<IFieldsProps> = ({ data, values, onChange }) => {
 export const Field: React.FC<IFieldProps> = ({ data, value, onChange }) => {
   switch (data.type) {
     case FieldType.Text:
-    case FieldType.Number:
       return (
         <TextBox
           name={data.name}
           value={value as string}
           onChange={onChange}
           label={data.label}
+          validationMessage={data.validationMessage}
+          validationState={data.validationState}
         ></TextBox>
+      );
+    case FieldType.Number:
+      return (
+        <TextNumberBox
+          name={data.name}
+          value={value as string}
+          onChange={onChange}
+          label={data.label}
+        ></TextNumberBox>
       );
     case FieldType.Date:
       return (

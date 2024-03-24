@@ -14,7 +14,9 @@ export const Dlg: React.FC<{
   children?: React.ReactNode;
   onClick: (event: EventType) => void;
   open: boolean;
-}> = ({ title, children, onClick, open }) => {
+  close?: string;
+  ok?: string;
+}> = ({ title, children, onClick, open, close = "Close", ok = "Ok" }) => {
   return (
     <Dialog modalType="alert" open={open}>
       <DialogSurface>
@@ -26,11 +28,11 @@ export const Dlg: React.FC<{
               appearance="secondary"
               onClick={() => onClick(EventType.Close)}
             >
-              Close
+              {close}
             </Button>
 
             <Button appearance="primary" onClick={() => onClick(EventType.Ok)}>
-              Apply Filter
+              {ok}
             </Button>
           </DialogActions>
         </DialogBody>

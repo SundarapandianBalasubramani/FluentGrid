@@ -9,6 +9,9 @@ export interface IField {
   options?: string[];
 
   value: unknown;
+
+  validationState?: "error" | "warning" | "success" | "none";
+  validationMessage?: string;
 }
 
 export enum FieldType {

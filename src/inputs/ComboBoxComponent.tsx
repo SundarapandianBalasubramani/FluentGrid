@@ -11,7 +11,6 @@ import type { ComboboxProps } from "@fluentui/react-components";
 import { IComboBoxProps } from "./types";
 import { Dismiss12Regular } from "@fluentui/react-icons";
 import type { OptionOnSelectData } from "@fluentui/react-combobox";
-import { FieldType } from "../fields/types";
 
 const useStyles = makeStyles({
   tagsList: {
@@ -37,9 +36,9 @@ export const ComboBoxComponent: React.FC<IComboBoxProps> = ({
 }) => {
   const styles = useStyles();
   const onOptionSelect: ComboboxProps["onOptionSelect"] = (_ev, data) =>
-    onChange?.(name, FieldType.Combobox, data, "selected");
+    onChange?.(name, data, "selected");
   const onInput = (ev: React.ChangeEvent<HTMLInputElement>): void =>
-    onChange?.(name, FieldType.Combobox, ev.target.value, "inputValue");
+    onChange?.(name, ev.target.value, "inputValue");
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onTagClick = (option: string, _index: number): void => {
@@ -49,7 +48,7 @@ export const ComboBoxComponent: React.FC<IComboBoxProps> = ({
       optionValue: "",
       selectedOptions: newSelected,
     };
-    onChange?.(name, FieldType.Combobox, data, "selected");
+    onChange?.(name, data, "selected");
   };
 
   return (

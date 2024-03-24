@@ -1,5 +1,3 @@
-import { FieldType } from "../fields/types";
-
 export interface IOption {
   id: string | number;
   value: string;
@@ -30,7 +28,6 @@ export interface IComboBoxProps {
   disabled?: boolean;
   onChange?: (
     name: string,
-    type: FieldType,
     val: unknown,
     data?: unknown | keyof ICustomComboBoxState
   ) => void;

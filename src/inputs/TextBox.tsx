@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Input, Field } from "@fluentui/react-components";
 import type { InputProps, Slot } from "@fluentui/react-components";
-import { FieldType } from "../fields/types";
 
 export const TextBox: React.FC<{
   value: string;
@@ -27,7 +26,8 @@ export const TextBox: React.FC<{
   validationMessage,
 }) => {
   const onInputChange: InputProps["onChange"] = (_ev, data) =>
-    onChange?.(name, FieldType.Text, data.value);
+    onChange?.(name, data.value);
+
   return (
     <Field
       label={label}

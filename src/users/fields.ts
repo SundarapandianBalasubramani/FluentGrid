@@ -55,7 +55,7 @@ export const fields: IField[] = [
     label: "Date",
     name: "date",
     type: FieldType.Date,
-    value: "",
+    value: null,
   },
   {
     label: "Roles",
