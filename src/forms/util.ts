@@ -21,8 +21,13 @@ export const getUserDetails = (fields: IField[]): UserValidaton => {
     }
     if (field.type === FieldType.Combobox && typeof field.value === "object") {
       val = (field.value as ICustomComboBoxState).selectedOptions;
-    } else if (field.type === FieldType.Date && typeof field.value === "object")
+    } else if (
+      field.value &&
+      field.type === FieldType.Date &&
+      typeof field.value === "object"
+    )
       val = (field.value as Date).toISOString();
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (user as any)[field.name] = val;
   });

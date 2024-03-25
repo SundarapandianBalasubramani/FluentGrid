@@ -1,22 +1,22 @@
 import {
-  Button,
-  makeStyles,
-  shorthands,
-  TableCell,
+  Button,  
+  Menu,
+  MenuItem,
+  MenuList,
+  MenuPopover,
+  MenuProps,
+  PositioningImperativeRef,  
+  TableCell,  
+  useRestoreFocusTarget,
 } from "@fluentui/react-components";
 import {
-  Delete24Regular,  
+  Delete24Regular,
   Edit24Regular,
   Eye24Filled,
+  MoreHorizontalFilled,
 } from "@fluentui/react-icons";
 import { EventType } from "../types/EventType";
-const useStyles = makeStyles({
-  buttons: {
-    display: "flex",
-    ...shorthands.gap("15px"),
-  },
-});
-
+import { useEffect, useRef, useState } from "react";
 export interface AdditionalColumnProps {
   onRowEvent?: (event: EventType, row: unknown | object) => void;
   row: unknown | object;
@@ -32,38 +32,79 @@ export const AdditionalColumns: React.FC<AdditionalColumnProps> = ({
   canEdit,
   canView,
 }) => {
-  const classes = useStyles();
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const positioningRef = useRef<PositioningImperativeRef>(null);
+  const [open, setOpen] = useState(false);
+  const onOpenChange: MenuProps["onOpenChange"] = (e, data) => {
+    // do not close menu as an outside click if clicking on the custom trigger/target
+    // this prevents it from closing & immediately re-opening when clicking custom triggers
+    if (data.type === "clickOutside" && e.target === buttonRef.current) {
+      return;
+    }
+
+    setOpen(data.open);
+  };
+
+  useEffect(() => {
+    if (buttonRef.current) {
+      positioningRef.current?.setTarget(buttonRef.current);
+    }
+  }, [buttonRef, positioningRef]);
+
+  const restoreFocusTargetAttribute = useRestoreFocusTarget();
+
   return (
     <TableCell>
-      <div className={classes.buttons}>
-        {canView && (
-          <Button
-            title={"View"}
-            icon={<Eye24Filled />}
-            onClick={() => {
-              onRowEvent?.(EventType.View, row);
-            }}
-          />
-        )}
-        {canEdit && (
-          <Button
-            title={"Edit"}
-            icon={<Edit24Regular />}
-            onClick={() => {
-              onRowEvent?.(EventType.Edit, row);
-            }}
-          />
-        )}
-        {canDelete && (
-          <Button
-            title={"Delete"}
-            icon={<Delete24Regular />}
-            onClick={() => {
-              onRowEvent?.(EventType.Delete, row);
-            }}
-          />
-        )}
-      </div>
+      <Button
+        {...restoreFocusTargetAttribute}
+        ref={buttonRef}
+        appearance="subtle"
+        title={"Actions"}
+        icon={<MoreHorizontalFilled />}
+        onClick={() => {
+          setOpen((prev) => !prev);
+        }}
+      />
+      <Menu
+        open={open}
+        onOpenChange={onOpenChange}
+        positioning={{ positioningRef }}
+      >
+        <MenuPopover>
+          <MenuList>
+            {canView && (
+              <MenuItem
+                icon={<Eye24Filled />}
+                onClick={() => {
+                  onRowEvent?.(EventType.View, row);
+                }}
+              >
+                View
+              </MenuItem>
+            )}
+            {canEdit && (
+              <MenuItem
+                icon={<Edit24Regular />}
+                onClick={() => {
+                  onRowEvent?.(EventType.Edit, row);
+                }}
+              >
+                Edit
+              </MenuItem>
+            )}
+            {canDelete && (
+              <MenuItem
+                icon={<Delete24Regular />}
+                onClick={() => {
+                  onRowEvent?.(EventType.Delete, row);
+                }}
+              >
+                Delete
+              </MenuItem>
+            )}
+          </MenuList>
+        </MenuPopover>
+      </Menu>
     </TableCell>
   );
 };

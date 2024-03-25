@@ -1,12 +1,13 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { OptionOnSelectData, makeStyles } from "@fluentui/react-components";
-import { Dlg } from "../Dlg";
+import { Dlg } from "../dialog";
 import { FieldType, IField } from "../fields/types";
 import { Field } from "../fields";
 import { EventType } from "../types/EventType";
 import { ICustomComboBoxState } from "../inputs/types";
 import { useAddUserMutation, useUpdateUserMutation } from "../store/user";
 import { getUserDetails } from "./util";
+import { useGetFormInfo } from "./useFormInfo";
 
 const useStyles = makeStyles({
   filter: {
@@ -37,16 +38,7 @@ export const User: React.FC<{
 
   const [updateUser] = useUpdateUserMutation();
 
-  const details = useMemo(() => {
-    const info = { Ok: "Add User", id: 0 };
-    const fld = data.find((d) => d.name === "id");
-    if (!isNaN(parseFloat(fld?.value as string))) {
-      info.Ok = "Update User";
-      if (fld?.value && !isNaN(parseFloat(fld.value as string)))
-        info.id = parseFloat(fld.value as string);
-    }
-    return info;
-  }, [data]);
+  const details = useGetFormInfo(data);
 
   const [fields, setFields] = useState(data.filter((d) => d.name !== "id"));
 
@@ -78,14 +70,15 @@ export const User: React.FC<{
     });
   };
 
-  const onClick = async (event: EventType) => {
-    /// onSave(event, data);
-    const info = getUserDetails(fields);
-    if (!info.hasValidationError) {
-      if (details.id > 0) await addUser(info.user);
-      else await updateUser(info.user);
-      onSave(event);
-    } else setFields(info.fields);
+  const onClick = async (e: EventType) => {    
+    if (e === EventType.Ok) {
+      const info = getUserDetails(structuredClone(fields));      
+      if (!info.hasValidationError) {
+        if (details.id > 0) await addUser(info.user);
+        else await updateUser(info.user);
+        onSave(e);
+      } else setFields(info.fields);
+    } else onSave(e);
   };
 
   return (
@@ -94,10 +87,10 @@ export const User: React.FC<{
       title={"User"}
       onClick={onClick}
       close="Close"
-      ok={details.Ok}
+      ok={`${details.Ok} User`}
     >
       <div className={styles.fields}>
-        {fields.slice(1).map((d) => (
+        {fields.slice(0).map((d) => (
           <Field data={d} onChange={onChange} key={d.name} value={d.value} />
         ))}
       </div>

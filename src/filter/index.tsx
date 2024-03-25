@@ -8,7 +8,7 @@ import {
   makeStyles,
 } from "@fluentui/react-components";
 import { Filter24Regular } from "@fluentui/react-icons";
-import { Dlg } from "../Dlg";
+import { Dlg } from "../dialog";
 import { FieldType, IField } from "../fields/types";
 import { Field } from "../fields";
 import { EventType } from "../types/EventType";

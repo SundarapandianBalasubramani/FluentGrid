@@ -114,6 +114,7 @@ export const Users: React.FC = () => {
   };
 
   const onAddUser = () => {
+    console.log(structuredClone(fields));
     setShowUserForm(structuredClone(fields));
   };
 
