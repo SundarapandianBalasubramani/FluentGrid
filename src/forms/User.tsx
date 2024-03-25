@@ -5,6 +5,8 @@ import { FieldType, IField } from "../fields/types";
 import { Field } from "../fields";
 import { EventType } from "../types/EventType";
 import { ICustomComboBoxState } from "../inputs/types";
+import { useAddUserMutation, useUpdateUserMutation } from "../store/user";
+import { getUserDetails } from "./util";
 
 const useStyles = makeStyles({
   filter: {
@@ -29,8 +31,12 @@ const useStyles = makeStyles({
 });
 export const User: React.FC<{
   data: IField[];
-  onSave: (event: EventType, fields: IField[]) => void;
+  onSave: (event: EventType) => void;
 }> = ({ data, onSave }) => {
+  const [addUser] = useAddUserMutation();
+
+  const [updateUser] = useUpdateUserMutation();
+
   const details = useMemo(() => {
     const info = { Ok: "Add User", id: 0 };
     const fld = data.find((d) => d.name === "id");
@@ -72,8 +78,14 @@ export const User: React.FC<{
     });
   };
 
-  const onClick = (event: EventType) => {
-    onSave(event, data);
+  const onClick = async (event: EventType) => {
+    /// onSave(event, data);
+    const info = getUserDetails(fields);
+    if (!info.hasValidationError) {
+      if (details.id > 0) await addUser(info.user);
+      else await updateUser(info.user);
+      onSave(event);
+    } else setFields(info.fields);
   };
 
   return (

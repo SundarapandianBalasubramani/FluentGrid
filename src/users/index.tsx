@@ -55,7 +55,8 @@ export const Users: React.FC = () => {
     pages: 0,
     total: 0,
   });
-  const { isLoading, data, error } = useGetUsersQuery(pager);
+  const { isLoading, data, error, refetch } = useGetUsersQuery(pager);
+
   const [sortState, setSortState] = useState<SortState>({
     sortDirection: undefined,
     sortColumn: undefined,
@@ -116,9 +117,11 @@ export const Users: React.FC = () => {
     setShowUserForm(structuredClone(fields));
   };
 
-  const onSave = (event: EventType, flds: IField[]) => {
-    if (event === EventType.Close) setShowUserForm(undefined);
-    console.log(flds);
+  const onSave = (event: EventType) => {
+    setShowUserForm(undefined);
+    if (event === EventType.Ok)
+      if (pager.page === 1) refetch();
+      else setPager((prev) => ({ ...prev, page: 1 }));
   };
 
   const onRowEvent = (evt: EventType, row: IUser): void => {
