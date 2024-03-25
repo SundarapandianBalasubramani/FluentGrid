@@ -15,7 +15,7 @@ export interface IUser {
 
   roles?: string[];
 
-  date?: string | Date;
+  date?: string | Date | null;
 }
 
 export interface IUserRepsonse {

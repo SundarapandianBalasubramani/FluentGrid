@@ -86,7 +86,7 @@ export const Filter: React.FC<{
   const onRemove = (fld: IField) => {
     let newFields: IField[] = [];
     setFields((prev) => {
-      newFields = [...prev];
+      newFields = structuredClone(prev);
       const index = newFields.findIndex((f) => f.name === fld.name);
       const val: Partial<ICustomComboBoxState> =
         fld.type === FieldType.Combobox && typeof fld.value === "object"
@@ -109,10 +109,10 @@ export const Filter: React.FC<{
           fld.value = val;
           break;
       }
-      newFields[index] = fld;
+      newFields[index] =  structuredClone(fld);
       return newFields;
     });
-    onApplyFilter(newFields);
+    onApplyFilter(getFilter(newFields));
   };
 
   const filters = getFilter(fields);

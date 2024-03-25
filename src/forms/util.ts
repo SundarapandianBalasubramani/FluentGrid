@@ -19,7 +19,7 @@ export const getUserDetails = (fields: IField[]): UserValidaton => {
         field.validationMessage = "Please fill the value";
       }
     }
-    if (field.type === FieldType.Combobox && typeof field.value === "object") {
+    if (field.type === FieldType.Combobox) {
       val = (field.value as ICustomComboBoxState).selectedOptions;
     } else if (
       field.value &&
@@ -33,3 +33,6 @@ export const getUserDetails = (fields: IField[]): UserValidaton => {
   });
   return { user: user as IUser, hasValidationError, fields };
 };
+
+export const getFieldsWithOutId = (data: IField[]): IField[] =>
+  data.filter((d) => d.name !== "id");

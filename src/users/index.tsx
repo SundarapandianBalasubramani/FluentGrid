@@ -12,13 +12,14 @@ import { EventType } from "../types/EventType";
 import { EnhancedTable } from "../table";
 import { columns } from "./columns";
 import { Pagination } from "../pagination";
-import { useGetUsersQuery } from "../store/user";
+import { useGetUsersQuery, useRemoveUserMutation } from "../store/user";
 import { Filter } from "../filter";
 import { WebContext } from "../context";
 import { fields, getFilterFields } from "./fields";
 import { FieldType, IField } from "../fields/types";
 import { Add28Filled } from "@fluentui/react-icons";
 import { User } from "../forms/User";
+import { ICustomComboBoxState } from "../inputs/types";
 
 const useStyles = makeStyles({
   container: {
@@ -56,6 +57,12 @@ export const Users: React.FC = () => {
     total: 0,
   });
   const { isLoading, data, error, refetch } = useGetUsersQuery(pager);
+  const [deleteUser] = useRemoveUserMutation();
+
+  const refetchData = () => {
+    if (pager.page === 1) refetch();
+    else setPager((prev) => ({ ...prev, page: 1 }));
+  };
 
   const [sortState, setSortState] = useState<SortState>({
     sortDirection: undefined,
@@ -120,23 +127,29 @@ export const Users: React.FC = () => {
 
   const onSave = (event: EventType) => {
     setShowUserForm(undefined);
-    if (event === EventType.Ok)
-      if (pager.page === 1) refetch();
-      else setPager((prev) => ({ ...prev, page: 1 }));
+    if (event === EventType.Ok) refetchData();
   };
 
-  const onRowEvent = (evt: EventType, row: IUser): void => {
+  const onRowEvent = async (evt: EventType, row: IUser) => {
     console.log(evt, row);
     if (evt === EventType.Edit) {
       const newfields = structuredClone(fields);
+      console.log(newfields);
       newfields.forEach((fld) => {
         const val = row[fld.name as keyof IUser];
-        if (fld.type !== FieldType.Combobox && fld.type !== FieldType.Date)
-          fld.value = val;
         if (fld.type == FieldType.Date)
           fld.value = val ? new Date(val as string) : null;
+        else if (fld.type == FieldType.Combobox && Array.isArray(val)) {
+          const fldvalue = fld.value as ICustomComboBoxState;
+          fldvalue.inputValue = val.join(", ");
+          fldvalue.selectedOptions = val;
+        } else fld.value = row[fld.name as keyof IUser];
       });
       setShowUserForm(newfields);
+    } else if (evt === EventType.Delete) {
+      const removeUser = await deleteUser(row.id);
+      console.log(removeUser);
+      refetchData();
     }
   };
 
@@ -165,7 +178,6 @@ export const Users: React.FC = () => {
           showActions
           canDelete
           canEdit
-          canView
           onEvent={onRowEvent}
           colSpan={columns.length + 1}
         />

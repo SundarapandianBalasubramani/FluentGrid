@@ -6,7 +6,7 @@ import { Field } from "../fields";
 import { EventType } from "../types/EventType";
 import { ICustomComboBoxState } from "../inputs/types";
 import { useAddUserMutation, useUpdateUserMutation } from "../store/user";
-import { getUserDetails } from "./util";
+import { getFieldsWithOutId, getUserDetails } from "./util";
 import { useGetFormInfo } from "./useFormInfo";
 
 const useStyles = makeStyles({
@@ -70,9 +70,9 @@ export const User: React.FC<{
     });
   };
 
-  const onClick = async (e: EventType) => {    
+  const onClick = async (e: EventType) => {
     if (e === EventType.Ok) {
-      const info = getUserDetails(structuredClone(fields));      
+      const info = getUserDetails(structuredClone(fields));
       if (!info.hasValidationError) {
         if (details.id > 0) await addUser(info.user);
         else await updateUser(info.user);
@@ -90,7 +90,7 @@ export const User: React.FC<{
       ok={`${details.Ok} User`}
     >
       <div className={styles.fields}>
-        {fields.slice(0).map((d) => (
+        {getFieldsWithOutId(fields).map((d) => (
           <Field data={d} onChange={onChange} key={d.name} value={d.value} />
         ))}
       </div>
